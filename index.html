@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,117 +5,321 @@
 <title>QuantumAI V2 Chat</title>
 
 <style>
-
-body{
-margin:0;
-font-family:system-ui;
-background:#0f172a;
-color:white;
-display:flex;
-flex-direction:column;
-height:100vh;
+/* --- THEME VARIABLES --- */
+:root {
+  --bg-color: #050914;
+  --bg-pattern: radial-gradient(circle at 50% 0%, #1a2244 0%, #050914 70%);
+  --header-bg: rgba(10, 15, 30, 0.6);
+  --input-bg: rgba(10, 15, 30, 0.8);
+  --text-main: #e2e8f0;
+  --accent: #00ffcc;
+  --accent-glow: rgba(0, 255, 204, 0.5);
+  --border-color: rgba(255, 255, 255, 0.08);
+  
+  --ai-msg-bg: rgba(30, 41, 59, 0.6);
+  --ai-msg-border: rgba(0, 255, 204, 0.2);
+  
+  --user-msg-bg: linear-gradient(135deg, #00c6ff, #0072ff);
+  --user-text: #ffffff;
+  
+  --btn-bg: rgba(0, 255, 204, 0.1);
+  --btn-hover: rgba(0, 255, 204, 0.2);
 }
 
-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:14px;
-background:#020617;
-border-bottom:1px solid #1e293b;
+.light {
+  --bg-color: #f8fafc;
+  --bg-pattern: radial-gradient(circle at 50% 0%, #e2e8f0 0%, #f8fafc 70%);
+  --header-bg: rgba(255, 255, 255, 0.7);
+  --input-bg: rgba(255, 255, 255, 0.9);
+  --text-main: #0f172a;
+  --accent: #0284c7;
+  --accent-glow: rgba(2, 132, 199, 0.3);
+  --border-color: rgba(0, 0, 0, 0.08);
+  
+  --ai-msg-bg: #ffffff;
+  --ai-msg-border: rgba(0, 0, 0, 0.1);
+  
+  --user-msg-bg: linear-gradient(135deg, #0ea5e9, #0284c7);
+  --user-text: #ffffff;
+  
+  --btn-bg: rgba(2, 132, 199, 0.1);
+  --btn-hover: rgba(2, 132, 199, 0.2);
 }
 
-header h1{
-margin:0;
-font-size:18px;
-color:#22c55e;
+/* --- BASE STYLES --- */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg-color);
+  background-image: var(--bg-pattern);
+  color: var(--text-main);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  transition: background 0.4s ease, color 0.4s ease;
+  overflow: hidden;
 }
 
-#themeBtn{
-cursor:pointer;
-font-size:18px;
+/* --- WELCOME POP-UP --- */
+#welcomeOverlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(5, 9, 20, 0.85);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
 }
 
-#chat{
-flex:1;
-overflow-y:auto;
-padding:20px;
-display:flex;
-flex-direction:column;
-gap:12px;
+.welcomeBox {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid var(--accent);
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 0 30px var(--accent-glow);
+  max-width: 80%;
+  animation: slideUp 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
-.msg{
-max-width:70%;
-padding:12px 16px;
-border-radius:16px;
-line-height:1.4;
-animation:fade .15s ease;
+.welcomeBox h1 {
+  margin: 0 0 10px 0;
+  font-size: 32px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px var(--accent-glow);
 }
 
-@keyframes fade{
-from{opacity:0; transform:translateY(5px)}
-to{opacity:1}
+.welcomeBox p {
+  font-size: 16px;
+  color: var(--text-main);
+  margin-bottom: 20px;
 }
 
-.user{
-background:#22c55e;
-color:black;
-align-self:flex-end;
+.welcomeBox .creator {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 30px;
 }
 
-.ai{
-background:#1e293b;
+.welcomeBox .creator span {
+  font-weight: bold;
+  color: var(--accent);
+  letter-spacing: 1px;
 }
 
-.code{
-background:#000;
-color:#00ff9c;
-font-family:monospace;
-white-space:pre-wrap;
+.welcomeBox button {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-img.chatimg{
-max-width:200px;
-border-radius:10px;
-margin-top:5px;
+/* --- HEADER --- */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: var(--header-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  z-index: 10;
 }
 
-#inputBar{
-display:flex;
-gap:6px;
-padding:10px;
-background:#020617;
-border-top:1px solid #1e293b;
+header h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  animation: neonPulse 2s infinite alternate;
 }
 
-#msgBox{
-flex:1;
-padding:12px;
-border-radius:10px;
-border:none;
-outline:none;
+#themeBtn {
+  cursor: pointer;
+  font-size: 20px;
+  transition: transform 0.3s ease;
 }
 
-button{
-padding:10px 14px;
-border:none;
-background:#22c55e;
-border-radius:8px;
-cursor:pointer;
+#themeBtn:hover { transform: scale(1.2) rotate(15deg); }
+
+/* --- CHAT AREA --- */
+#chat {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  scroll-behavior: smooth;
 }
 
-button:hover{
-opacity:.8;
+#chat::-webkit-scrollbar { width: 6px; }
+#chat::-webkit-scrollbar-track { background: transparent; }
+#chat::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+#chat::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* --- MESSAGES --- */
+.msg {
+  max-width: 75%;
+  padding: 14px 18px;
+  border-radius: 20px;
+  line-height: 1.5;
+  font-size: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  animation: slideUp 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  opacity: 0;
+  transform: translateY(15px) scale(0.95);
+  word-wrap: break-word;
 }
 
-.light{
-background:white;
-color:black;
+.user {
+  background: var(--user-msg-bg);
+  color: var(--user-text);
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
 }
 
-.light #chat{
-background:white;
+.ai {
+  background: var(--ai-msg-bg);
+  border: 1px solid var(--ai-msg-border);
+  backdrop-filter: blur(8px);
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+
+/* --- CODE BOX STYLES --- */
+.code-wrapper {
+  max-width: 85%;
+  padding: 0;
+  background: #090e17;
+  border: 1px solid #1e293b;
+  overflow: hidden;
+}
+
+.code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1e293b;
+  padding: 8px 14px;
+  font-size: 13px;
+  color: #94a3b8;
+  font-family: monospace;
+}
+
+.copy-btn {
+  background: transparent;
+  border: 1px solid #475569;
+  color: #e2e8f0;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.copy-btn:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: #94a3b8;
+  box-shadow: none;
+  transform: none;
+}
+
+.code-content {
+  margin: 0;
+  padding: 14px;
+  color: #00ffcc;
+  font-family: 'Courier New', monospace;
+  white-space: pre-wrap;
+  font-size: 14px;
+  overflow-x: auto;
+}
+
+img.chatimg {
+  max-width: 250px;
+  border-radius: 12px;
+  margin-top: 8px;
+  border: 2px solid var(--border-color);
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+/* --- INPUT BAR --- */
+#inputBar {
+  display: flex;
+  gap: 8px;
+  padding: 16px 20px;
+  background: var(--input-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border-color);
+}
+
+#msgBox {
+  flex: 1;
+  padding: 14px 20px;
+  border-radius: 30px;
+  border: 1px solid var(--border-color);
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--text-main);
+  font-size: 15px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.light #msgBox { background: rgba(0, 0, 0, 0.05); }
+
+#msgBox:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+button {
+  padding: 12px 18px;
+  border: 1px solid var(--border-color);
+  background: var(--btn-bg);
+  color: var(--accent);
+  font-weight: 600;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button:hover {
+  background: var(--btn-hover);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px var(--accent-glow);
+}
+
+button:active { transform: translateY(0); }
+
+button[onclick="send()"] {
+  background: var(--user-msg-bg);
+  color: white;
+  border: none;
+}
+button[onclick="send()"]:hover { box-shadow: 0 4px 15px rgba(0, 114, 255, 0.4); }
+
+/* --- ANIMATIONS --- */
+@keyframes slideUp {
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes neonPulse {
+  from { text-shadow: 0 0 5px var(--accent-glow); }
+  to { text-shadow: 0 0 15px var(--accent), 0 0 20px var(--accent); }
 }
 
 </style>
@@ -124,124 +327,199 @@ background:white;
 
 <body>
 
-<header>
-<h1>⚡ QuantumAI Chat</h1>
-<div>
-<span id="themeBtn">🌙</span>
+<div id="welcomeOverlay">
+  <div class="welcomeBox">
+    <h1>Quantum AI</h1>
+    <p>Welcome to the next generation of AI.</p>
+    <p class="creator">Developed by <span>DILIP DC</span></p>
+    <button onclick="closeWelcome()">Initialize Sequence</button>
+  </div>
 </div>
+
+<header>
+  <h1>⚡ QuantumAI</h1>
+  <div>
+    <span id="themeBtn" title="Toggle Theme">🌙</span>
+  </div>
 </header>
 
 <div id="chat">
-<div class="msg ai">Hello! I am QuantumAI. How can I help you?</div>
+  <div class="msg ai">System initialized. Hello! I am QuantumAI, created by DILIP DC. How can I assist you today?</div>
 </div>
 
 <div id="inputBar">
-<input id="msgBox" placeholder="Type your message...">
-<button onclick="send()">Send</button>
-<button onclick="voice()">🎤</button>
-<button onclick="image()">📷</button>
-<button onclick="newChat()">New</button>
+  <button onclick="newChat()" title="New Chat">✨</button>
+  <button onclick="image()" title="Send Image">📷</button>
+  <button onclick="voice()" title="Voice Input">🎤</button>
+  <input id="msgBox" placeholder="Initialize command sequence..." onkeypress="if(event.key==='Enter') send()">
+  <button onclick="send()">Send</button>
 </div>
 
 <script>
+// --- UI LOGIC ---
 
-const chat = document.getElementById("chat")
-
-function addMsg(text,type){
-
-const div=document.createElement("div")
-div.className="msg "+type
-
-if(text.startsWith("```")){
-div.classList.add("code")
-text=text.replace(/```/g,"")
+function closeWelcome() {
+  const overlay = document.getElementById('welcomeOverlay');
+  overlay.style.opacity = '0';
+  setTimeout(() => {
+    overlay.style.visibility = 'hidden';
+  }, 500); // Wait for fade-out animation to finish
 }
 
-div.innerText=text
+function copyCode(btn) {
+  // Find the <pre> block that comes directly after the header
+  const codeBlock = btn.parentElement.nextElementSibling.innerText;
+  navigator.clipboard.writeText(codeBlock).then(() => {
+    const originalText = btn.innerText;
+    btn.innerText = "Copied!";
+    btn.style.color = "#00ffcc";
+    btn.style.borderColor = "#00ffcc";
+    
+    setTimeout(() => {
+      btn.innerText = "Copy";
+      btn.style.color = "";
+      btn.style.borderColor = "";
+    }, 2000);
+  });
+}
 
-chat.appendChild(div)
-chat.scrollTop=chat.scrollHeight
+// --- CORE LOGIC ---
 
-return div
+const chat = document.getElementById("chat");
+
+function addMsg(text, type){
+  const div = document.createElement("div");
+  
+  if(text.startsWith("```")){
+    // It's a code block
+    div.className = "msg " + type + " code-wrapper";
+    let cleanCode = text.replace(/```/g, "").trim();
+    
+    // Build the Copy Header and Code Content
+    div.innerHTML = `
+      <div class="code-header">
+        <span>Terminal</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre class="code-content"><code></code></pre>
+    `;
+    
+    // Safely insert text to prevent HTML injection
+    div.querySelector('code').textContent = cleanCode;
+  } else {
+    // Normal message
+    div.className = "msg " + type;
+    div.innerText = text;
+  }
+
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+
+  return div;
 }
 
 function addImage(src){
+  const div = document.createElement("div");
+  div.className = "msg user";
 
-const div=document.createElement("div")
-div.className="msg user"
+  const img = document.createElement("img");
+  img.src = src;
+  img.className = "chatimg";
 
-const img=document.createElement("img")
-img.src=src
-img.className="chatimg"
-
-div.appendChild(img)
-
-chat.appendChild(div)
-chat.scrollTop=chat.scrollHeight
+  div.appendChild(img);
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
 }
 
 async function send(){
+  const box = document.getElementById("msgBox");
+  const text = box.value.trim();
 
-const box=document.getElementById("msgBox")
-const text=box.value.trim()
+  if(!text) return;
 
-if(!text) return
+  addMsg(text, "user");
+  box.value = "";
 
-addMsg(text,"user")
-box.value=""
+  const typing = addMsg("Processing...", "ai");
 
-const typing=addMsg("Thinking...","ai")
-
-const res=await fetch("/chat",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({message:text})
-})
-
-const data=await res.json()
-typing.innerText=data.reply
+  try {
+    const res = await fetch("/chat", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({message: text})
+    });
+    
+    const data = await res.json();
+    
+    // Update the typing message with actual response
+    if (data.reply.startsWith("```")) {
+       // If the AI replied with code, we need to re-render the div structure
+       typing.className = "msg ai code-wrapper";
+       let cleanCode = data.reply.replace(/```/g, "").trim();
+       typing.innerHTML = `
+        <div class="code-header">
+          <span>Terminal</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre class="code-content"><code></code></pre>
+      `;
+      typing.querySelector('code').textContent = cleanCode;
+    } else {
+       typing.innerText = data.reply;
+    }
+    
+    chat.scrollTop = chat.scrollHeight;
+    
+  } catch (err) {
+    typing.innerText = "Error: Unable to connect to server.";
+    typing.style.color = "#ef4444";
+  }
 }
 
 function newChat(){
-chat.innerHTML=""
-addMsg("New conversation started.","ai")
+  chat.innerHTML = "";
+  addMsg("New secure conversation started.", "ai");
 }
 
 function voice(){
+  const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  rec.lang = "en-US";
 
-const rec=new webkitSpeechRecognition()
-rec.lang="en-US"
+  rec.onresult = function(e){
+    document.getElementById("msgBox").value = e.results[0][0].transcript;
+  }
+  
+  document.getElementById("msgBox").placeholder = "Listening...";
+  rec.onend = () => document.getElementById("msgBox").placeholder = "Initialize command sequence...";
 
-rec.onresult=function(e){
-document.getElementById("msgBox").value=e.results[0][0].transcript
-}
-
-rec.start()
+  rec.start();
 }
 
 function image(){
-
-const url=prompt("Enter image URL")
-if(url) addImage(url)
+  const url = prompt("Enter Image URL:");
+  if(url) addImage(url);
 }
 
-document.getElementById("themeBtn").onclick=function(){
-document.body.classList.toggle("light")
+document.getElementById("themeBtn").onclick = function(){
+  document.body.classList.toggle("light");
+  this.innerText = document.body.classList.contains("light") ? "☀️" : "🌙";
 }
 
 async function loadHistory(){
+  try {
+    const r = await fetch("/history");
+    const data = await r.json();
 
-const r=await fetch("/history")
-const data=await r.json()
-
-data.reverse().forEach(row=>{
-addMsg(row[0],"user")
-addMsg(row[1],"ai")
-})
-
+    data.reverse().forEach(row => {
+      addMsg(row[0], "user");
+      addMsg(row[1], "ai");
+    });
+  } catch (e) {
+    console.log("No history found or server offline.");
+  }
 }
 
-loadHistory()
+loadHistory();
 
 </script>
 
