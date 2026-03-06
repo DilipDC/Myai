@@ -1,326 +1,199 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>QuantumAI V2 Chat</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>QuantumAI | DILIP DC</title>
 
 <style>
-/* --- THEME VARIABLES --- */
+/* --- ADVANCED CORE SETTINGS --- */
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
 :root {
-  --bg-color: #050914;
-  --bg-pattern: radial-gradient(circle at 50% 0%, #1a2244 0%, #050914 70%);
-  --header-bg: rgba(10, 15, 30, 0.6);
-  --input-bg: rgba(10, 15, 30, 0.8);
-  --text-main: #e2e8f0;
-  --accent: #00ffcc;
-  --accent-glow: rgba(0, 255, 204, 0.5);
-  --border-color: rgba(255, 255, 255, 0.08);
-  
-  --ai-msg-bg: rgba(30, 41, 59, 0.6);
-  --ai-msg-border: rgba(0, 255, 204, 0.2);
-  
-  --user-msg-bg: linear-gradient(135deg, #00c6ff, #0072ff);
-  --user-text: #ffffff;
-  
-  --btn-bg: rgba(0, 255, 204, 0.1);
-  --btn-hover: rgba(0, 255, 204, 0.2);
+  --bg-color: #020617;
+  --accent: #00f2ff;
+  --accent-secondary: #7000ff;
+  --text-main: #f8fafc;
+  --panel-bg: rgba(15, 23, 42, 0.8);
+  --border-glow: 0 0 10px rgba(0, 242, 255, 0.3);
 }
 
-.light {
-  --bg-color: #f8fafc;
-  --bg-pattern: radial-gradient(circle at 50% 0%, #e2e8f0 0%, #f8fafc 70%);
-  --header-bg: rgba(255, 255, 255, 0.7);
-  --input-bg: rgba(255, 255, 255, 0.9);
-  --text-main: #0f172a;
-  --accent: #0284c7;
-  --accent-glow: rgba(2, 132, 199, 0.3);
-  --border-color: rgba(0, 0, 0, 0.08);
-  
-  --ai-msg-bg: #ffffff;
-  --ai-msg-border: rgba(0, 0, 0, 0.1);
-  
-  --user-msg-bg: linear-gradient(135deg, #0ea5e9, #0284c7);
-  --user-text: #ffffff;
-  
-  --btn-bg: rgba(2, 132, 199, 0.1);
-  --btn-hover: rgba(2, 132, 199, 0.2);
-}
-
-/* --- BASE STYLES --- */
 body {
   margin: 0;
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-family: 'Segoe UI', Roboto, sans-serif;
   background: var(--bg-color);
-  background-image: var(--bg-pattern);
+  background-image: 
+    radial-gradient(circle at 50% 0%, #1e1b4b 0%, #020617 70%),
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 30px 30px, 30px 30px;
   color: var(--text-main);
+  height: 100dvh;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  transition: background 0.4s ease, color 0.4s ease;
   overflow: hidden;
 }
 
-/* --- WELCOME POP-UP --- */
+/* --- WELCOME SCREEN --- */
 #welcomeOverlay {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(5, 9, 20, 0.85);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  z-index: 100;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: opacity 0.5s ease, visibility 0.5s ease;
+  position: fixed; inset: 0;
+  background: #020617;
+  z-index: 9999;
+  display: flex; justify-content: center; align-items: center;
+  transition: opacity 0.6s ease;
 }
-
 .welcomeBox {
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid var(--accent);
-  padding: 40px;
-  border-radius: 20px;
   text-align: center;
-  box-shadow: 0 0 30px var(--accent-glow);
-  max-width: 80%;
-  animation: slideUp 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  border: 1px solid var(--accent);
+  padding: 40px 20px;
+  border-radius: 2px; /* Brutalist futuristic style */
+  background: rgba(0,0,0,0.8);
+  box-shadow: var(--border-glow);
+}
+.welcomeBox h1 { 
+  font-size: 28px; letter-spacing: 5px; color: var(--accent); margin: 0;
+  text-transform: uppercase;
+}
+.creator-tag {
+  display: block; margin-top: 10px; font-size: 12px; color: #64748b;
 }
 
-.welcomeBox h1 {
-  margin: 0 0 10px 0;
-  font-size: 32px;
-  color: var(--accent);
-  text-transform: uppercase;
+/* --- THE NAME ANIMATION (DILIP DC) --- */
+.brand-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.dilip-name {
+  font-size: 12px;
+  font-weight: 900;
   letter-spacing: 2px;
-  text-shadow: 0 0 10px var(--accent-glow);
-}
-
-.welcomeBox p {
-  font-size: 16px;
-  color: var(--text-main);
-  margin-bottom: 20px;
-}
-
-.welcomeBox .creator {
-  font-size: 14px;
-  opacity: 0.8;
-  margin-bottom: 30px;
-}
-
-.welcomeBox .creator span {
-  font-weight: bold;
   color: var(--accent);
-  letter-spacing: 1px;
-}
-
-.welcomeBox button {
-  width: 100%;
-  padding: 14px;
-  font-size: 16px;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  animation: neonGlitch 3s infinite;
+}
+@keyframes neonGlitch {
+  0%, 100% { text-shadow: 0 0 5px var(--accent); opacity: 1; }
+  50% { text-shadow: 0 0 20px var(--accent-secondary); opacity: 0.8; }
+  52% { opacity: 1; transform: skewX(-10deg); }
+  54% { transform: skewX(0deg); }
 }
 
 /* --- HEADER --- */
 header {
+  padding: 15px 20px;
+  background: rgba(2, 6, 23, 0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 242, 255, 0.2);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 24px;
-  background: var(--header-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border-color);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  z-index: 10;
 }
-
-header h1 {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  animation: neonPulse 2s infinite alternate;
-}
-
-#themeBtn {
-  cursor: pointer;
-  font-size: 20px;
-  transition: transform 0.3s ease;
-}
-
-#themeBtn:hover { transform: scale(1.2) rotate(15deg); }
+header h1 { font-size: 16px; margin: 0; color: #fff; letter-spacing: 1px; }
 
 /* --- CHAT AREA --- */
 #chat {
   flex: 1;
   overflow-y: auto;
-  padding: 24px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  scroll-behavior: smooth;
+  gap: 15px;
 }
 
-#chat::-webkit-scrollbar { width: 6px; }
-#chat::-webkit-scrollbar-track { background: transparent; }
-#chat::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
-#chat::-webkit-scrollbar-thumb:hover { background: var(--accent); }
-
-/* --- MESSAGES --- */
 .msg {
-  max-width: 75%;
-  padding: 14px 18px;
-  border-radius: 20px;
+  max-width: 85%;
+  padding: 12px 16px;
+  font-size: 14px;
   line-height: 1.5;
-  font-size: 15px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  animation: slideUp 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-  opacity: 0;
-  transform: translateY(15px) scale(0.95);
-  word-wrap: break-word;
+  position: relative;
+  animation: slideIn 0.3s ease-out forwards;
 }
-
-.user {
-  background: var(--user-msg-bg);
-  color: var(--user-text);
-  align-self: flex-end;
-  border-bottom-right-radius: 4px;
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 .ai {
-  background: var(--ai-msg-bg);
-  border: 1px solid var(--ai-msg-border);
-  backdrop-filter: blur(8px);
+  background: var(--panel-bg);
+  border-left: 3px solid var(--accent);
   align-self: flex-start;
-  border-bottom-left-radius: 4px;
+  border-radius: 0 15px 15px 15px;
 }
 
-/* --- CODE BOX STYLES --- */
+.user {
+  background: linear-gradient(135deg, var(--accent-secondary), #4f46e5);
+  color: white;
+  align-self: flex-end;
+  border-radius: 15px 0 15px 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* --- CODE BLOCK --- */
 .code-wrapper {
-  max-width: 85%;
-  padding: 0;
-  background: #090e17;
-  border: 1px solid #1e293b;
+  background: #000;
+  border-radius: 8px;
+  margin: 10px 0;
   overflow: hidden;
+  border: 1px solid #1e293b;
 }
-
 .code-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   background: #1e293b;
-  padding: 8px 14px;
-  font-size: 13px;
-  color: #94a3b8;
-  font-family: monospace;
+  padding: 5px 12px;
+  display: flex; justify-content: space-between;
+  font-size: 10px; color: #94a3b8;
 }
+.copy-btn { cursor: pointer; color: var(--accent); }
+.code-content { padding: 12px; font-family: monospace; overflow-x: auto; color: #00ffcc; }
 
-.copy-btn {
-  background: transparent;
-  border: 1px solid #475569;
-  color: #e2e8f0;
-  padding: 4px 10px;
-  font-size: 12px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.copy-btn:hover {
-  background: rgba(255,255,255,0.1);
-  border-color: #94a3b8;
-  box-shadow: none;
-  transform: none;
-}
-
-.code-content {
-  margin: 0;
-  padding: 14px;
-  color: #00ffcc;
-  font-family: 'Courier New', monospace;
-  white-space: pre-wrap;
-  font-size: 14px;
-  overflow-x: auto;
-}
-
-img.chatimg {
-  max-width: 250px;
-  border-radius: 12px;
-  margin-top: 8px;
-  border: 2px solid var(--border-color);
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
-}
-
-/* --- INPUT BAR --- */
+/* --- INPUT AREA (BUTTONS ON RIGHT) --- */
 #inputBar {
+  padding: 12px;
+  background: rgba(15, 23, 42, 0.95);
+  border-top: 1px solid rgba(0, 242, 255, 0.2);
   display: flex;
   gap: 8px;
-  padding: 16px 20px;
-  background: var(--input-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid var(--border-color);
+  align-items: center;
 }
 
 #msgBox {
   flex: 1;
-  padding: 14px 20px;
-  border-radius: 30px;
-  border: 1px solid var(--border-color);
-  background: rgba(0, 0, 0, 0.2);
-  color: var(--text-main);
-  font-size: 15px;
-  outline: none;
-  transition: all 0.3s ease;
-}
-
-.light #msgBox { background: rgba(0, 0, 0, 0.05); }
-
-#msgBox:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 10px var(--accent-glow);
-}
-
-button {
-  padding: 12px 18px;
-  border: 1px solid var(--border-color);
-  background: var(--btn-bg);
-  color: var(--accent);
-  font-weight: 600;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-button:hover {
-  background: var(--btn-hover);
-  border-color: var(--accent);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px var(--accent-glow);
-}
-
-button:active { transform: translateY(0); }
-
-button[onclick="send()"] {
-  background: var(--user-msg-bg);
+  background: rgba(0,0,0,0.3);
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 12px 15px;
   color: white;
+  outline: none;
+  font-size: 15px;
+}
+#msgBox:focus { border-color: var(--accent); }
+
+.btn-group {
+  display: flex;
+  gap: 6px;
+}
+
+.action-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  border: 1px solid #1e293b;
+  background: #0f172a;
+  color: var(--accent);
+  display: flex; justify-content: center; align-items: center;
+  font-size: 16px;
+}
+
+.send-btn {
+  background: var(--accent);
+  color: #000;
   border: none;
-}
-button[onclick="send()"]:hover { box-shadow: 0 4px 15px rgba(0, 114, 255, 0.4); }
-
-/* --- ANIMATIONS --- */
-@keyframes slideUp {
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  font-weight: bold;
 }
 
-@keyframes neonPulse {
-  from { text-shadow: 0 0 5px var(--accent-glow); }
-  to { text-shadow: 0 0 15px var(--accent), 0 0 20px var(--accent); }
-}
+/* Scrollbar */
+#chat::-webkit-scrollbar { width: 4px; }
+#chat::-webkit-scrollbar-thumb { background: var(--accent); }
 
 </style>
 </head>
@@ -329,118 +202,78 @@ button[onclick="send()"]:hover { box-shadow: 0 4px 15px rgba(0, 114, 255, 0.4); 
 
 <div id="welcomeOverlay">
   <div class="welcomeBox">
-    <h1>Quantum AI</h1>
-    <p>Welcome to the next generation of AI.</p>
-    <p class="creator">Developed by <span>DILIP DC</span></p>
-    <button onclick="closeWelcome()">Initialize Sequence</button>
+    <h1>QUANTUM AI</h1>
+    <span class="creator-tag">SYSTEM BY DILIP DC</span>
+    <button onclick="enterSystem()" style="margin-top:25px; background:var(--accent); border:none; padding:10px 20px; font-weight:bold; cursor:pointer;">INITIALIZE</button>
   </div>
 </div>
 
 <header>
-  <h1>⚡ QuantumAI</h1>
-  <div>
-    <span id="themeBtn" title="Toggle Theme">🌙</span>
+  <div class="brand-container">
+    <h1>⚡ QUANTUM_AI</h1>
+    <div class="dilip-name">DILIP DC</div>
   </div>
+  <div id="themeBtn" style="font-size: 20px; cursor:pointer;">🌙</div>
 </header>
 
 <div id="chat">
-  <div class="msg ai">System initialized. Hello! I am QuantumAI, created by DILIP DC. How can I assist you today?</div>
+  <div class="msg ai">System Online. Welcome, Commander Dilip. How shall we proceed?</div>
 </div>
 
 <div id="inputBar">
-  <button onclick="newChat()" title="New Chat">✨</button>
-  <button onclick="image()" title="Send Image">📷</button>
-  <button onclick="voice()" title="Voice Input">🎤</button>
-  <input id="msgBox" placeholder="Initialize command sequence..." onkeypress="if(event.key==='Enter') send()">
-  <button onclick="send()">Send</button>
+  <input id="msgBox" placeholder="Enter command..." onkeypress="if(event.key==='Enter') send()">
+  
+  <div class="btn-group">
+    <button class="action-btn" onclick="image()">📷</button>
+    <button class="action-btn" onclick="voice()">🎤</button>
+    <button class="action-btn" onclick="newChat()">✨</button>
+    <button class="action-btn send-btn" onclick="send()">➔</button>
+  </div>
 </div>
 
 <script>
-// --- UI LOGIC ---
-
-function closeWelcome() {
+function enterSystem() {
   const overlay = document.getElementById('welcomeOverlay');
   overlay.style.opacity = '0';
-  setTimeout(() => {
-    overlay.style.visibility = 'hidden';
-  }, 500); // Wait for fade-out animation to finish
+  setTimeout(() => overlay.style.display = 'none', 600);
 }
 
-function copyCode(btn) {
-  // Find the <pre> block that comes directly after the header
-  const codeBlock = btn.parentElement.nextElementSibling.innerText;
-  navigator.clipboard.writeText(codeBlock).then(() => {
-    const originalText = btn.innerText;
-    btn.innerText = "Copied!";
-    btn.style.color = "#00ffcc";
-    btn.style.borderColor = "#00ffcc";
-    
-    setTimeout(() => {
-      btn.innerText = "Copy";
-      btn.style.color = "";
-      btn.style.borderColor = "";
-    }, 2000);
-  });
+function copyCode(span) {
+  const code = span.closest('.code-wrapper').querySelector('code').innerText;
+  navigator.clipboard.writeText(code);
+  span.innerText = "COPIED";
+  setTimeout(() => span.innerText = "COPY", 2000);
 }
-
-// --- CORE LOGIC ---
 
 const chat = document.getElementById("chat");
 
-function addMsg(text, type){
+function addMsg(text, type) {
   const div = document.createElement("div");
-  
-  if(text.startsWith("```")){
-    // It's a code block
+  if(text.startsWith("```")) {
     div.className = "msg " + type + " code-wrapper";
-    let cleanCode = text.replace(/```/g, "").trim();
-    
-    // Build the Copy Header and Code Content
+    let code = text.replace(/```/g, "").trim();
     div.innerHTML = `
-      <div class="code-header">
-        <span>Terminal</span>
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-      </div>
-      <pre class="code-content"><code></code></pre>
+      <div class="code-header"><span>TERMINAL</span><span class="copy-btn" onclick="copyCode(this)">COPY</span></div>
+      <pre class="code-content"><code>${code}</code></pre>
     `;
-    
-    // Safely insert text to prevent HTML injection
-    div.querySelector('code').textContent = cleanCode;
   } else {
-    // Normal message
     div.className = "msg " + type;
     div.innerText = text;
   }
-
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
-
   return div;
 }
 
-function addImage(src){
-  const div = document.createElement("div");
-  div.className = "msg user";
-
-  const img = document.createElement("img");
-  img.src = src;
-  img.className = "chatimg";
-
-  div.appendChild(img);
-  chat.appendChild(div);
-  chat.scrollTop = chat.scrollHeight;
-}
-
-async function send(){
+async function send() {
   const box = document.getElementById("msgBox");
   const text = box.value.trim();
-
   if(!text) return;
 
   addMsg(text, "user");
   box.value = "";
 
-  const typing = addMsg("Processing...", "ai");
+  const typing = addMsg("Calculating...", "ai");
 
   try {
     const res = await fetch("/chat", {
@@ -448,80 +281,46 @@ async function send(){
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({message: text})
     });
-    
     const data = await res.json();
     
-    // Update the typing message with actual response
-    if (data.reply.startsWith("```")) {
-       // If the AI replied with code, we need to re-render the div structure
-       typing.className = "msg ai code-wrapper";
-       let cleanCode = data.reply.replace(/```/g, "").trim();
-       typing.innerHTML = `
-        <div class="code-header">
-          <span>Terminal</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        </div>
-        <pre class="code-content"><code></code></pre>
-      `;
-      typing.querySelector('code').textContent = cleanCode;
+    if(data.reply.startsWith("```")) {
+       typing.classList.add("code-wrapper");
+       let code = data.reply.replace(/```/g, "").trim();
+       typing.innerHTML = `<div class="code-header"><span>TERMINAL</span><span class="copy-btn" onclick="copyCode(this)">COPY</span></div><pre class="code-content"><code>${code}</code></pre>`;
     } else {
        typing.innerText = data.reply;
     }
-    
-    chat.scrollTop = chat.scrollHeight;
-    
-  } catch (err) {
-    typing.innerText = "Error: Unable to connect to server.";
-    typing.style.color = "#ef4444";
+  } catch(e) {
+    typing.innerText = "Signal lost. Re-trying...";
   }
 }
 
-function newChat(){
-  chat.innerHTML = "";
-  addMsg("New secure conversation started.", "ai");
-}
-
-function voice(){
+function voice() {
   const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
   rec.lang = "en-US";
-
-  rec.onresult = function(e){
-    document.getElementById("msgBox").value = e.results[0][0].transcript;
-  }
-  
-  document.getElementById("msgBox").placeholder = "Listening...";
-  rec.onend = () => document.getElementById("msgBox").placeholder = "Initialize command sequence...";
-
+  rec.onresult = (e) => document.getElementById("msgBox").value = e.results[0][0].transcript;
   rec.start();
 }
 
-function image(){
-  const url = prompt("Enter Image URL:");
-  if(url) addImage(url);
-}
-
-document.getElementById("themeBtn").onclick = function(){
-  document.body.classList.toggle("light");
-  this.innerText = document.body.classList.contains("light") ? "☀️" : "🌙";
-}
-
-async function loadHistory(){
-  try {
-    const r = await fetch("/history");
-    const data = await r.json();
-
-    data.reverse().forEach(row => {
-      addMsg(row[0], "user");
-      addMsg(row[1], "ai");
-    });
-  } catch (e) {
-    console.log("No history found or server offline.");
+function image() {
+  const url = prompt("Upload Image URL:");
+  if(url) {
+    const div = document.createElement("div");
+    div.className = "msg user";
+    div.innerHTML = `<img src="${url}" style="max-width:100%; border-radius:10px;">`;
+    chat.appendChild(div);
   }
 }
 
-loadHistory();
+function newChat() {
+  chat.innerHTML = "";
+  addMsg("Data wiped. New session initialized.", "ai");
+}
+
+document.getElementById("themeBtn").onclick = function() {
+  document.body.style.filter = document.body.style.filter === 'invert(1)' ? 'invert(0)' : 'invert(1)';
+}
 
 </script>
-
 </body>
 </html>
