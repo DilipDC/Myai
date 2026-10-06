@@ -15,10 +15,10 @@ def test_blocked():
     assert classify("rm -rf /").risk == Risk.BLOCKED
 
 
-def test_secret_memory_blocked():
+def test_secret_memory_blocked(tmp_path):
     from memory.store import MemoryStore
     from database.database import Database
-    db = Database(":memory:")
+    db = Database(tmp_path / "secret.db")
     db.initialize()
     with pytest.raises(ValueError):
         MemoryStore(db).remember("my api key is abc")
