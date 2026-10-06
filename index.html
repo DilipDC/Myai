@@ -1,83 +1,42 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>JARVIS — Built by Dilip</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JARVIS — BUILT BY DILIP</title>
 <style>
-:root{--bg:#05070b;--panel:#0c1119;--line:#1b2a38;--accent:#00e5ff;--text:#e8f1f5;--muted:#81909a}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px system-ui,-apple-system,Segoe UI,sans-serif;height:100vh;display:flex;overflow:hidden}
-main{width:100%;max-width:1100px;margin:auto;height:100vh;display:flex;flex-direction:column;border-inline:1px solid var(--line);background:linear-gradient(180deg,#081018,#05070b)}
-header{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px}
-.brand{font-weight:800;letter-spacing:2px}.sub{font-size:11px;color:var(--accent);margin-top:3px}
-.status{color:#6dff9b;font-size:12px}
-#chat{flex:1;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
-.msg{max-width:82%;padding:11px 14px;border:1px solid var(--line);border-radius:12px;white-space:pre-wrap;line-height:1.5}
-.user{align-self:flex-end;background:#101b29;border-color:#234157}.ai{align-self:flex-start;background:var(--panel)}
-.meta{font-size:10px;color:var(--muted);margin-bottom:5px}
-#composer{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
-textarea{flex:1;resize:none;min-height:44px;max-height:140px;background:#070b10;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:12px;outline:none}
-button{border:1px solid #195367;background:#071a22;color:var(--accent);border-radius:10px;padding:0 18px;cursor:pointer}
-button:hover{background:#0c2b36}
-#statusbar{display:flex;gap:14px;padding:8px 12px;font-size:11px;color:var(--muted);border-top:1px solid var(--line)}
-@media(max-width:650px){.msg{max-width:94%}button{padding:0 12px}}
+:root{--bg:#04070a;--panel:#091017;--line:#18303d;--cyan:#00e5ff;--green:#61ff9a;--text:#e9f7fb;--muted:#78909c}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#09202a 0,#04070a 42%);color:var(--text);font:13px system-ui,sans-serif;height:100vh;overflow:hidden}
+.shell{height:100vh;display:grid;grid-template-columns:240px 1fr 250px;grid-template-rows:70px 1fr 62px;max-width:1500px;margin:auto;border-inline:1px solid var(--line)}
+header{grid-column:1/-1;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+.brand{font-size:20px;font-weight:900;letter-spacing:4px}.built{color:var(--cyan);font-size:10px;letter-spacing:2px}.online{color:var(--green);font-weight:700}
+aside{padding:15px;border-right:1px solid var(--line);overflow:auto}.right{border-left:1px solid var(--line);border-right:0}
+h3{font-size:10px;color:var(--muted);letter-spacing:2px;margin:12px 0}.metric{padding:10px;border:1px solid var(--line);background:#071018;border-radius:9px;margin-bottom:8px}.value{font-size:18px;color:var(--cyan)}
+#chat{overflow:auto;padding:24px;display:flex;flex-direction:column;gap:13px}.msg{max-width:80%;padding:12px 15px;border:1px solid var(--line);border-radius:12px;white-space:pre-wrap;line-height:1.5}.user{align-self:flex-end;background:#0c1b28}.ai{background:var(--panel)}
+#composer{grid-column:1/-1;border-top:1px solid var(--line);display:flex;gap:8px;padding:9px 12px}textarea{flex:1;background:#050a0e;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:11px;resize:none}button{background:#071c25;color:var(--cyan);border:1px solid #195568;border-radius:9px;padding:0 14px;cursor:pointer}button:hover{background:#0a2934}
+.list{font-size:11px;color:var(--muted);line-height:1.6}.task{border-bottom:1px solid var(--line);padding:7px 0}
+@media(max-width:900px){.shell{grid-template-columns:1fr;grid-template-rows:65px 1fr 62px}.left,.right{display:none}}
 </style>
 </head>
 <body>
-<main>
-<header>
-  <div><div class="brand">JARVIS</div><div class="sub">BUILT BY DILIP</div></div>
-  <div id="online" class="status">CHECKING…</div>
-</header>
+<div class="shell">
+<header><div><div class="brand">JARVIS</div><div class="built">BUILT BY DILIP</div></div><div id="online" class="online">CONNECTING…</div></header>
+<aside class="left"><h3>SYSTEM</h3><div class="metric">CPU<div id="cpu" class="value">—</div></div><div class="metric">RAM<div id="ram" class="value">—</div></div><div class="metric">MODEL<div id="model" class="value" style="font-size:12px">—</div></div><h3>MEMORY</h3><div id="memory" class="list">—</div></aside>
 <section id="chat"></section>
-<div id="statusbar">
-  <span id="model">Model: —</span>
-  <span id="ram">RAM: —</span>
-  <span id="cpu">CPU: —</span>
+<aside class="right"><h3>TASKS</h3><div id="tasks" class="list">—</div><h3>NETWORK</h3><div id="network" class="list">—</div><h3>VOICE</h3><button id="mic">MIC</button> <button id="speak">TTS</button></aside>
+<form id="composer"><textarea id="input" rows="1" placeholder="Command JARVIS…"></textarea><button>SEND</button></form>
 </div>
-<form id="composer">
-  <textarea id="input" placeholder="Type a command…"></textarea>
-  <button>Send</button>
-</form>
-</main>
 <script>
-const chat=document.getElementById("chat"), input=document.getElementById("input");
-function add(text,who){
-  const wrap=document.createElement("div"); wrap.className="msg "+who;
-  const meta=document.createElement("div"); meta.className="meta"; meta.textContent=who==="ai"?"JARVIS":"YOU";
-  const body=document.createElement("div"); body.textContent=text;
-  wrap.append(meta,body); chat.appendChild(wrap); chat.scrollTop=chat.scrollHeight;
-}
-async function load(){
-  try{
-    const r=await fetch("/history"); const rows=await r.json();
-    rows.reverse().forEach(x=>{add(x.user_message,"user");add(x.ai_response,"ai")});
-  }catch{}
-  await refreshStatus();
-}
-async function refreshStatus(){
-  try{
-    const r=await fetch("/status"); const s=await r.json();
-    document.getElementById("online").textContent=s.ollama.ok?"JARVIS ONLINE":"OLLAMA OFFLINE";
-    document.getElementById("model").textContent="Model: "+(s.model.active||"—");
-    document.getElementById("ram").textContent="RAM: "+s.system.ram_percent+"%";
-    document.getElementById("cpu").textContent="CPU: "+s.system.cpu_percent+"%";
-  }catch{}
-}
-document.getElementById("composer").addEventListener("submit",async e=>{
-  e.preventDefault(); const text=input.value.trim(); if(!text)return;
-  add(text,"user"); input.value="";
-  add("Thinking…","ai"); const pending=chat.lastElementChild.lastElementChild;
-  try{
-    const r=await fetch("/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:text})});
-    const d=await r.json(); pending.textContent=d.reply||d.error||"No response.";
-  }catch(err){pending.textContent="JARVIS ERROR: "+err.message}
-  refreshStatus();
-});
-input.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();document.getElementById("composer").requestSubmit()}});
-add("Phase 1 online. Local-first mode is ready when Ollama is running.","ai");
-load();
-setInterval(refreshStatus,5000);
+const $=id=>document.getElementById(id),chat=$("chat"),input=$("input");
+function add(text,who){let x=document.createElement("div");x.className="msg "+who;x.textContent=text;chat.append(x);chat.scrollTop=chat.scrollHeight}
+async function status(){
+ try{let s=await (await fetch("/status")).json();$("online").textContent=s.ollama.ok?"● ONLINE":"● OLLAMA OFFLINE";$("cpu").textContent=s.system.cpu_percent+"%";$("ram").textContent=s.system.ram_used_mb+" MB / "+s.system.ram_percent+"%";$("model").textContent=s.model.active||"IDLE";$("memory").textContent=s.memory_count+" stored memories";$("tasks").innerHTML=s.tasks.length?s.tasks.map(t=>"<div class='task'>"+t.text+"<br>"+t.run_at+"</div>").join(""):"No active tasks";}catch{}}
+async function sys(){try{let s=await (await fetch("/system")).json();$("network").textContent=s.network.map(n=>n.name).join("\n")||"offline"}catch{}}
+async function send(text){if(!text)return;add(text,"user");add("Thinking…","ai");let pending=chat.lastElementChild;try{let d=await (await fetch("/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:text})})).json();pending.textContent=d.reply||d.error||"No response."}catch(e){pending.textContent="JARVIS ERROR: "+e.message}status()}
+$("composer").onsubmit=e=>{e.preventDefault();let t=input.value.trim();input.value="";send(t)};
+input.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();$("composer").requestSubmit()}};
+$("speak").onclick=()=>{let last=[...document.querySelectorAll(".msg.ai")].pop();if(last&&"speechSynthesis"in window)speechSynthesis.speak(new SpeechSynthesisUtterance(last.textContent))};
+$("mic").onclick=()=>{const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){add("Browser speech recognition is unavailable; text input remains available.","ai");return}let r=new SR();r.lang=navigator.language||"en-US";r.onresult=e=>send(e.results[0][0].transcript);r.start()};
+add("JARVIS ONLINE. Local-first command center ready.","ai");status();sys();setInterval(status,4000);setInterval(sys,10000);
 </script>
 </body>
 </html>
